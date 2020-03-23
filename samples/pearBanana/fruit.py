@@ -33,6 +33,7 @@ import json
 import datetime
 import numpy as np
 import skimage.draw
+from imgaug import augmenters as iaa
 
 # Root directory of the project
 ROOT_DIR = os.path.abspath("../../")
@@ -54,7 +55,7 @@ DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
 ############################################################
 
 
-class BalloonConfig(Config):
+class FruitConfig(Config):
     """Configuration for training on the toy  dataset.
     Derives from the base Config class and overrides some values.
     """
@@ -68,25 +69,95 @@ class BalloonConfig(Config):
     # Adjust down if you use a smaller GPU.
     IMAGES_PER_GPU = 1
 
+    # Backbone network architecture
+    # Supported values are: resnet50, resnet101
+    BACKBONE = "resnet101" # used for head in first version of dataset
+    # BACKBONE = "resnet50"
+
     # Number of classes (including background)
     NUM_CLASSES = 1 + 2  # Background + banana + pear
 
-    # Number of training steps per epoch
-    STEPS_PER_EPOCH = 500
-    VALIDATION_STEPS = 35
+    # Input image resizing
+    # Generally, use the "square" resizing mode for training and predicting
+    # and it should work well in most cases. In this mode, images are scaled
+    # up such that the small side is = IMAGE_MIN_DIM, but ensuring that the
+    # scaling doesn't make the long side > IMAGE_MAX_DIM. Then the image is
+    # padded with zeros to make it a square so multiple images can be put
+    # in one batch.
+    # Available resizing modes:
+    # none:   No resizing or padding. Return the image unchanged.
+    # square: Resize and pad with zeros to get a square image
+    #         of size [max_dim, max_dim].
+    # pad64:  Pads width and height with zeros to make them multiples of 64.
+    #         If IMAGE_MIN_DIM or IMAGE_MIN_SCALE are not None, then it scales
+    #         up before padding. IMAGE_MAX_DIM is ignored in this mode.
+    #         The multiple of 64 is needed to ensure smooth scaling of feature
+    #         maps up and down the 6 levels of the FPN pyramid (2**6=64).
+    # crop:   Picks random crops from the image. First, scales the image based
+    #         on IMAGE_MIN_DIM and IMAGE_MIN_SCALE, then picks a random crop of
+    #         size IMAGE_MIN_DIM x IMAGE_MIN_DIM. Can be used in training only.
+    #         IMAGE_MAX_DIM is not used in this mode.
+    IMAGE_RESIZE_MODE = "square"
+    IMAGE_MIN_DIM = 800
+    IMAGE_MAX_DIM = 1024 # 1600 for heads, 1280for 4+, 1024 works for all
 
-    # Skip detections with < 90% confidence
-    DETECTION_MIN_CONFIDENCE = 0.9
+    # Image mean (RGB)
+    MEAN_PIXEL = np.array([123.7, 116.8, 103.9])
+
+    # Number of ROIs per image to feed to classifier/mask heads
+    # The Mask RCNN paper uses 512 but often the RPN doesn't generate
+    # enough positive proposals to fill this and keep a positive:negative
+    # ratio of 1:3. You can increase the number of proposals by adjusting
+    # the RPN NMS threshold.
+    TRAIN_ROIS_PER_IMAGE = 200 # 512 for heads. 200 for 4+ & all
+
+    # Non-max suppression threshold to filter RPN proposals.
+    # You can increase this during training to generate more proposals.
+    RPN_NMS_THRESHOLD = 0.7 # default
+
+    # ROIs kept after non-maximum suppression (training and inference)
+    POST_NMS_ROIS_TRAINING = 2000  # 2000 for heads,4+ & all
+
+    # How many anchors per image to use for RPN training
+    RPN_TRAIN_ANCHORS_PER_IMAGE = 256 # 320 for heads,256 for 3+ & all
+
+    # Minimum probability value to accept a detected instance
+    # ROIs below this threshold are skipped
+    DETECTION_MIN_CONFIDENCE = 0.7
+
+    # Maximum number of ground truth instances to use in one image
+    # don't think an identify-able image can hold >200 fruit instances
+    MAX_GT_INSTANCES = 100 # was 200 for head, 150 for 4+, 100 for all
+
+    # Number of training steps per epoch
+    STEPS_PER_EPOCH = 300
+    VALIDATION_STEPS = 30
+
+    # Learning rate and momentum
+    # The Mask RCNN paper uses lr=0.02, but on TensorFlow it causes
+    # weights to explode. Likely due to differences in optimizer
+    # implementation.
+    LEARNING_RATE = 0.001
+    LEARNING_MOMENTUM = 0.9
+
+    # Weight decay regularization
+    # affect L2 strength and is a good way of preventing overfitting.
+    # try 0.01, 0.005 and 0.001 first, then try more precisely.
+
+    WEIGHT_DECAY = 0.0001
+
+    # Max number of final detections
+    DETECTION_MAX_INSTANCES = 200
 
 
 ############################################################
 #  Dataset
 ############################################################
 
-class BalloonDataset(utils.Dataset):
+class FruitDataset(utils.Dataset):
 
     def load_fruit(self, dataset_dir, subset):
-        """Load a subset of the Balloon dataset.
+        """Load a subset of the Fruit dataset.
         dataset_dir: Root directory of the dataset.
         subset: Subset to load: train or val
         """
@@ -166,7 +237,7 @@ class BalloonDataset(utils.Dataset):
             one mask per instance.
         class_ids: a 1D array of class IDs of the instance masks.
         """
-        # If not a balloon dataset image, delegate to parent class.
+        # If not a Fruit dataset image, delegate to parent class.
         image_info = self.image_info[image_id]
         if image_info["source"] != "fruit":
             return super(self.__class__, self).load_mask(image_id)
@@ -202,30 +273,74 @@ class BalloonDataset(utils.Dataset):
 def train(model):
     """Train the model."""
     # Training dataset.
-    dataset_train = BalloonDataset()
+    dataset_train = FruitDataset()
     dataset_train.load_fruit(args.dataset, "train")
     dataset_train.prepare()
 
     # Validation dataset
-    dataset_val = BalloonDataset()
+    dataset_val = FruitDataset()
     dataset_val.load_fruit(args.dataset, "val")
     dataset_val.prepare()
+
+    # default augmentation
+    # augmentation = iaa.Sometimes(0.5, [
+    #     iaa.Fliplr(0.5),
+    #     iaa.GaussianBlur(sigma=(0.0, 5.0))
+    # ])
+
+    # key to handle overfitting on a small training dataset is augmentation
+    augmentation = iaa.SomeOf((0, 2), [
+        iaa.Fliplr(0.5),
+        iaa.Flipud(0.5),
+        iaa.OneOf([iaa.Affine(rotate=90),
+                   iaa.Affine(rotate=180),
+                   iaa.Affine(rotate=270)]),
+        # Make some images brighter and some darker.
+        # In 20% of all cases, we sample the multiplier once per channel,
+        # which can end up changing the color of the images.
+        iaa.Multiply((0.8, 1.2)),
+        # Small gaussian blur with random sigma between 0 and 0.25.
+        # But we only blur about 50% of all images.
+        iaa.GaussianBlur(sigma=(0.0, 0.25)),
+        # Strengthen or weaken the contrast in each image.
+        iaa.ContrastNormalization((0.75, 1.5))
+    ])
+
 
     # *** This training schedule is an example. Update to your needs ***
     # Since we're using a very small dataset, and starting from
     # COCO trained weights, we don't need to train too long. Also,
     # no need to train all layers, just the heads should do it.
-    print("Training network heads")
-    model.train(dataset_train, dataset_val,
-                learning_rate=config.LEARNING_RATE,
-                epochs=2,
-                layers='heads')
 
-    # print("Training all layers")
+    # MULTIPLE STAGE to help converge easier, since we have limited dataset
+
+    # # we have limited training data, so train the classifier only might be a gud idea
+    # # this ensure we keep the good coco weights untouched
+    # # Training - Stage 1
+    # print("Training network heads")
     # model.train(dataset_train, dataset_val,
     #             learning_rate=config.LEARNING_RATE,
-    #             epochs=6,
-    #             layers='all')
+    #             epochs=35,
+    #             augmentation=augmentation,
+    #             layers='heads')
+
+    # # Training - Stage 2
+    # # Finetune layers from ResNet stage 4 and up
+    # print("Fine tune Resnet stage 4 and up")
+    # model.train(dataset_train, dataset_val,
+    #             learning_rate=config.LEARNING_RATE/10,
+    #             epochs=55,
+    #             augmentation=augmentation,
+    #             layers='4+')
+
+    # Training - Stage 3
+    # Fine tune all layers
+    print("Training all layers")
+    model.train(dataset_train, dataset_val,
+                learning_rate=config.LEARNING_RATE/100,
+                epochs=65,
+                augmentation=augmentation,
+                layers='all')
 
 
 def color_splash(image, mask):
@@ -309,13 +424,13 @@ if __name__ == '__main__':
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(
-        description='Train Mask R-CNN to detect balloons.')
+        description='Train Mask R-CNN to detect Fruit.')
     parser.add_argument("command",
                         metavar="<command>",
                         help="'train' or 'splash'")
     parser.add_argument('--dataset', required=False,
-                        metavar="/path/to/balloon/dataset/",
-                        help='Directory of the Balloon dataset')
+                        metavar="/path/to/Fruit/dataset/",
+                        help='Directory of the Fruit dataset')
     parser.add_argument('--weights', required=True,
                         metavar="/path/to/weights.h5",
                         help="Path to weights .h5 file or 'coco'")
@@ -344,13 +459,34 @@ if __name__ == '__main__':
 
     # Configurations
     if args.command == "train":
-        config = BalloonConfig()
+        config = FruitConfig()
     else:
-        class InferenceConfig(BalloonConfig):
+        class InferenceConfig(FruitConfig):
             # Set batch size to 1 since we'll be running inference on
             # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
             GPU_COUNT = 1
             IMAGES_PER_GPU = 1
+
+            POST_NMS_ROIS_INFERENCE = 2000
+
+            # proved->the higher the image quality, the better the detection accuracy will be increased
+            # How every, the detection speed will be slowed dramatically
+            IMAGE_RESIZE_MODE = "square"
+            IMAGE_MIN_DIM = 800
+            IMAGE_MAX_DIM = 3520  # was 1024,
+            # for 3692*5000 images: 2560 can pass, 3520pass, 3840pass[memory warning *2],4160 pass[warning*8]
+            # MAX----4480 pass[many warnings]----MAX, 4800 FAILED
+
+            # Non-max suppression threshold to filter RPN proposals.
+            # You can increase this during training to generate more propsals.
+            RPN_NMS_THRESHOLD = 0.7
+
+            # Minimum probability value to accept a detected instance
+            # ROIs below this threshold are skipped
+            DETECTION_MIN_CONFIDENCE = 0.6
+
+            # Max number of final detections
+            DETECTION_MAX_INSTANCES = 200
         config = InferenceConfig()
     config.display()
 

@@ -26,18 +26,35 @@ import fruit
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 
 # Local path to trained weights file
-COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/fruit20200319T0012/mask_rcnn_fruit_0002.h5")
+COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/fruit20200322T1750/mask_rcnn_fruit_0055.h5")
 
 # Directory of images to run detection on
 IMAGE_DIR = os.path.join(ROOT_DIR, "datasets/fruit/test")
 
-class InferenceConfig(fruit.BalloonConfig):
+class InferenceConfig(fruit.FruitConfig):
     # Set batch size to 1 since we'll be running inference on
     # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
 
-    DETECTION_MIN_CONFIDENCE = 0.7
+    POST_NMS_ROIS_INFERENCE = 2000
+
+    # proved->the higher the image quality, the better the detection accuracy will be increased
+    # How every, the detection speed will be slowed dramatically
+    IMAGE_RESIZE_MODE = "square"
+    IMAGE_MIN_DIM = 800
+    IMAGE_MAX_DIM = 3520 # was 1024
+
+    # Non-max suppression threshold to filter RPN proposals.
+    # You can increase this during training to generate more propsals.
+    RPN_NMS_THRESHOLD = 0.7
+
+    # Minimum probability value to accept a detected instance
+    # ROIs below this threshold are skipped
+    DETECTION_MIN_CONFIDENCE = 0.6
+
+    # Max number of final detections
+    DETECTION_MAX_INSTANCES = 200
 
 config = InferenceConfig()
 config.display()
