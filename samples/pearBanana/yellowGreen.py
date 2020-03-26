@@ -71,8 +71,8 @@ class FruitConfig(Config):
 
     # Backbone network architecture
     # Supported values are: resnet50, resnet101
-    BACKBONE = "resnet101" # used for head in first version of dataset
-    # BACKBONE = "resnet50"
+    # BACKBONE = "resnet101" # used for head in first version of dataset
+    BACKBONE = "resnet50"
 
     # Number of classes (including background)
     NUM_CLASSES = 1 + 3  # Background + pear + banana-ripe + banana-nonRipe
@@ -315,13 +315,13 @@ def train(model):
 
     # MULTIPLE STAGE to help converge easier, since we have limited dataset
 
-    # # we have limited training data, so train the classifier only might be a gud idea
-    # # this ensure we keep the good coco weights untouched
-    # # Training - Stage 1
+    # we have limited training data, so train the classifier only might be a gud idea
+    # this ensure we keep the good coco weights untouched
+    # Training - Stage 1
     # print("Training network heads")
     # model.train(dataset_train, dataset_val,
     #             learning_rate=config.LEARNING_RATE,
-    #             epochs=35,
+    #             epochs=50,
     #             augmentation=augmentation,
     #             layers='heads')
 
@@ -339,7 +339,7 @@ def train(model):
     print("Training all layers")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE/100,
-                epochs=65,
+                epochs=75,
                 augmentation=augmentation,
                 layers='all')
 
