@@ -6,6 +6,9 @@ results/
 temp/
 test/
 
+# image-comparisons store between different models
+compare-2class
+compare-3class
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

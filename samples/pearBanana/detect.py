@@ -26,7 +26,7 @@ import yellowGreen
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 
 # Local path to trained weights file
-COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/fruit20200323T2329/mask_rcnn_fruit_0010.h5")
+COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/res101-3class/mask_rcnn_fruit_0062.h5")
 
 # Directory of images to run detection on
 IMAGE_DIR = os.path.join(ROOT_DIR, "datasets/fruit/test")
@@ -75,6 +75,7 @@ image = skimage.io.imread(os.path.join(IMAGE_DIR, random.choice(file_names)))
 results = model.detect([image], verbose=1)
 
 # Visualize results
-r = results[0]
+r = results[0] ### the length of this will be the count of items found
+print(r['class_ids'])
 visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
                             class_names, r['scores'])

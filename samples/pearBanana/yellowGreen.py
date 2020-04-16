@@ -71,8 +71,8 @@ class FruitConfig(Config):
 
     # Backbone network architecture
     # Supported values are: resnet50, resnet101
-    # BACKBONE = "resnet101" # used for head in first version of dataset
-    BACKBONE = "resnet50"
+    BACKBONE = "resnet101" # used for head in first version of dataset
+    # BACKBONE = "resnet50"
 
     # Number of classes (including background)
     NUM_CLASSES = 1 + 3  # Background + pear + banana-ripe + banana-nonRipe
