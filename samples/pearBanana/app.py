@@ -17,6 +17,7 @@ import math
 import numpy as np
 import skimage.io
 import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # Root directory of the project
@@ -102,8 +103,8 @@ def detect_onsite(model, IMAGE_DIR):
     # Visualize results
     r = results[0]  ### the length of this will be the count of items found
     print(r['class_ids'])
-    # visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
-    #                             class_names, r['scores'])
+    visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],   #注意我修改了visualize.py 的line166，因为此前安装的MASK RCNN的此文件并没有改动，多以需要再去主文件夹运行python setup.py install
+                                class_names, r['scores'])
     print('executed detect_onsite')
     return 'completed detecting: ' + names_chosen
 ###############################################################
