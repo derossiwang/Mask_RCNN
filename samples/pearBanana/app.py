@@ -1,11 +1,13 @@
 # 导入Flask类
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, redirect
 #####################################
 # import flask_detect as fd
 
 ########################Flask
 
 # 实例化，可视为固定格式
+from werkzeug.utils import secure_filename
+
 app = Flask(__name__, template_folder='')
 
 
@@ -43,6 +45,11 @@ COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/res101-3class/mask_rcnn_fruit_006
 
 # Directory of images to run detection on
 IMAGE_DIR = os.path.join(ROOT_DIR, "datasets/fruit/test")
+
+
+UPLOAD_FOLDER = os.path.join(ROOT_DIR, "samples/pearBanana/upload_images")
+ALLOWED_EXTENSIONS = set(['jpg'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 class InferenceConfig(yellowGreen.FruitConfig):
     # Set batch size to 1 since we'll be running inference on
@@ -93,9 +100,9 @@ def detect_onsite(model, IMAGE_DIR):
     # class_names = ['BG', 'banana', 'pear']
     class_names = ['BG', 'pear', 'banana-ripe', 'banana-nonRipe']
 
-    user_file_names = next(os.walk(IMAGE_DIR))[2]
+    user_file_names = next(os.walk(UPLOAD_FOLDER))[2]
     names_chosen = random.choice(user_file_names)
-    image = skimage.io.imread(os.path.join(IMAGE_DIR, names_chosen))
+    image = skimage.io.imread(os.path.join(UPLOAD_FOLDER, names_chosen))
     print('\n-----------------',len([image]), '---------------\n')
     # Run detection
     results = model.detect([image], verbose=1)
@@ -108,15 +115,37 @@ def detect_onsite(model, IMAGE_DIR):
     print('executed detect_onsite')
     return 'completed detecting: ' + names_chosen
 ###############################################################
-
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+###############################################################
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('upload.html')
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        f = request.files['file']
+        print(request.files)
+        if f and allowed_file(f.filename):
+            filename = secure_filename(f.filename)
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_image.jpg'))
+            return redirect('/detect')
+        else:
+            print('file type is not correct')
+            return render_template('upload.html')
+
 
 @app.route('/detect')
 def detect():
-    return detect_onsite(model, IMAGE_DIR)
+    detect_onsite(model, IMAGE_DIR)
+    return render_template('result_detect.html')
 
+@app.route('/splash')
+def splash():
+    detect_onsite(model, IMAGE_DIR)
+    return render_template('result_splash.html')
 '''
 Main function to run Flask server
 '''
