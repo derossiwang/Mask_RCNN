@@ -1,16 +1,14 @@
-# 导入Flask类
+
+
+
 from flask import Flask, request, render_template, jsonify, redirect
-#####################################
-# import flask_detect as fd
+from datetime import timedelta
 
-########################Flask
 
-# 实例化，可视为固定格式
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__, template_folder='')
-
-
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)  # avoid caching, which prevent showing the detection/splash result
 ###################################
 import os
 import sys
@@ -110,7 +108,7 @@ def detect_onsite(model, IMAGE_DIR):
     # Visualize results
     r = results[0]  ### the length of this will be the count of items found
     print(r['class_ids'])
-    visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],   #注意我修改了visualize.py 的line166，因为此前安装的MASK RCNN的此文件并没有改动，多以需要再去主文件夹运行python setup.py install
+    visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],   #Modified visualize.py 的line166, so need to run 'python setup.py install' again
                                 class_names, r['scores'])
     print('executed detect_onsite')
     return 'completed detecting: ' + names_chosen
@@ -119,6 +117,7 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 ###############################################################
+
 @app.route('/')
 def home():
     return render_template('upload.html')
@@ -140,6 +139,8 @@ def upload_file():
 @app.route('/detect')
 def detect():
     detect_onsite(model, IMAGE_DIR)
+    result_folder = os.path.join(ROOT_DIR, "samples/pearBanana")
+    detection_result = os.path.join(result_folder, "detection_result.jpg")
     return render_template('result_detect.html')
 
 @app.route('/splash')

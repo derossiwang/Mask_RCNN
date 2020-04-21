@@ -163,7 +163,7 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             p = Polygon(verts, facecolor="none", edgecolor=color)
             ax.add_patch(p)
     ax.imshow(masked_image.astype(np.uint8))
-    plt.savefig('detection_result.jpg') #test to save image
+    plt.savefig('static/images/detection_result.jpg') #test to save image
     # plt.show()
     plt.close()
     # if auto_show:
