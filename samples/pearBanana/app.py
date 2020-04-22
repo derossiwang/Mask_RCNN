@@ -42,7 +42,7 @@ MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/res101-3class/mask_rcnn_fruit_0062.h5")
 
 # Directory of images to run detection on
-IMAGE_DIR = os.path.join(ROOT_DIR, "datasets/fruit/test")
+IMAGE_DIR = os.path.join(ROOT_DIR, "samples/pearBanana/static/initializeImage")
 
 
 UPLOAD_FOLDER = os.path.join(ROOT_DIR, "samples/pearBanana/upload_images")
@@ -83,7 +83,7 @@ model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
 # Load weights trained on MS-COCO
 model.load_weights(COCO_MODEL_PATH, by_name=True)
 
-#################测试后发现必须得在全局先运行一次detection才可以!!!!!!!!!!!!
+################# Must run the detction once to save the model to memory! #######
 class_names = ['BG', 'pear', 'banana-ripe', 'banana-nonRipe']
 
 file_names = next(os.walk(IMAGE_DIR))[2]
@@ -94,7 +94,7 @@ results = model.detect([image], verbose=1)
 r = results[0]  ### the length of this will be the count of items found
 print(r['class_ids'],'\ncompleted initializing\n')
 
-def detect_onsite(model, IMAGE_DIR):
+def detect_onsite(model):
     # class_names = ['BG', 'banana', 'pear']
     class_names = ['BG', 'pear', 'banana-ripe', 'banana-nonRipe']
 
@@ -117,13 +117,53 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 ###############################################################
+def color_splash(image, mask):
+    """Apply color splash effect.
+    image: RGB image [height, width, 3]
+    mask: instance segmentation mask [height, width, instance count]
 
+    Returns result image.
+    """
+    # Make a grayscale copy of the image. The grayscale copy still
+    # has 3 RGB channels, though.
+    gray = skimage.color.gray2rgb(skimage.color.rgb2gray(image)) * 255
+    # Copy color pixels from the original color image where mask is set
+    if mask.shape[-1] > 0:
+        # We're treating all instances as one, so collapse the mask into one layer
+        mask = (np.sum(mask, -1, keepdims=True) >= 1)
+        splash = np.where(mask, image, gray).astype(np.uint8)
+    else:
+        splash = gray.astype(np.uint8)
+    return splash
+
+
+def detect_and_color_splash(model):
+    # Run model detection and generate the color splash effect
+    # Read image
+    user_file_names = next(os.walk(UPLOAD_FOLDER))[2]
+    names_chosen = random.choice(user_file_names)
+    image = skimage.io.imread(os.path.join(UPLOAD_FOLDER, names_chosen))
+    # Detect objects
+    r = model.detect([image], verbose=1)[0]
+    # Color splash
+    splash = color_splash(image, r['masks'])
+    # # Save output
+    skimage.io.imsave('static/images/splash_result.jpg', splash)
+    print('executed color splash')
+################################################################
 @app.route('/')
 def home():
-    return render_template('upload.html')
+    if request.method == 'GET':
+        return render_template('index.html')
 
-@app.route('/upload', methods=['GET', 'POST'])
-def upload_file():
+    return render_template('index.html')
+
+
+@app.route('/UploadDetect', methods=['GET', 'POST'])
+def upload_file_detect():
+    if request.method == 'GET':
+        return render_template('upload_detect.html')
+
     if request.method == 'POST':
         f = request.files['file']
         print(request.files)
@@ -133,19 +173,33 @@ def upload_file():
             return redirect('/detect')
         else:
             print('file type is not correct')
-            return render_template('upload.html')
+            return render_template('upload_detect.html')
+
+@app.route('/UploadSplash', methods=['GET', 'POST'])
+def upload_file_splash():
+    if request.method == 'GET':
+        return render_template('upload_splash.html')
+
+    if request.method == 'POST':
+        f = request.files['file']
+        print(request.files)
+        if f and allowed_file(f.filename):
+            filename = secure_filename(f.filename)
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_image.jpg'))
+            return redirect('/splash')
+        else:
+            print('file type is not correct')
+            return render_template('upload_splash.html')
 
 
 @app.route('/detect')
 def detect():
-    detect_onsite(model, IMAGE_DIR)
-    result_folder = os.path.join(ROOT_DIR, "samples/pearBanana")
-    detection_result = os.path.join(result_folder, "detection_result.jpg")
+    detect_onsite(model)
     return render_template('result_detect.html')
 
 @app.route('/splash')
 def splash():
-    detect_onsite(model, IMAGE_DIR)
+    detect_and_color_splash(model)
     return render_template('result_splash.html')
 '''
 Main function to run Flask server
