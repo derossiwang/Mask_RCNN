@@ -75,8 +75,8 @@ class InferenceConfig(yellowGreen.FruitConfig):
     DETECTION_MAX_INSTANCES = 200
 
 config = InferenceConfig()
-config.display()
-
+# config.display()
+print('\n\n -----Please be patient, the initializing process can take a while depending on your computability-----\n\n')
 # Create model object in inference mode.
 model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
 
@@ -88,11 +88,11 @@ class_names = ['BG', 'pear', 'banana-ripe', 'banana-nonRipe']
 
 file_names = next(os.walk(IMAGE_DIR))[2]
 image = skimage.io.imread(os.path.join(IMAGE_DIR, random.choice(file_names)))
-
+print('\n\n -----Please be patient, almost done initialing-----\n\n')
 # Run detection
 results = model.detect([image], verbose=1)
 r = results[0]  ### the length of this will be the count of items found
-print(r['class_ids'],'\ncompleted initializing\n')
+print('\n\n -----Initialization Complete -----\n\n')
 
 def detect_onsite(model):
     # class_names = ['BG', 'banana', 'pear']
