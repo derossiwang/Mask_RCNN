@@ -1,15 +1,32 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Flask sample upload</title>
+<title>Upload Then Detect</title>
+    <style>
+        .btn {
+            border-radius: 12px;
+            font-size: 20px;
+            transition-duration: 0.4s;
+        }
+        .btn:hover {
+            background-color: #4CAF50; /* Green */
+            color: white;
+        }
+
+
+    </style>
 </head>
    <body>
+   <h1 style="text-align:center">Photo Upload</h1>
+   <p style="text-align:center;margin-top:20px; font-size:22px">Select and upload a 'jpg' photo which you wish to run detection on</p>
+   <p style="text-align:center;margin-top:20px; font-size:22px">Please be patient when detecting. <span style="color:red;font-size:20px">Depending on the <strong>image quality, number of potential objects and your computational power</strong>, The detection can take about <strong>0.5-10 mins</strong></span></p>
+   <hr>
 
-     <form action = "http://localhost:5000/UploadDetect" method = "POST"
-         enctype = "multipart/form-data">
-         <input type = "file" name = "file" />
-         <input type = "submit" value="Upload and Detect"/>
-     </form>
+     <center><form action = "http://localhost:5000/UploadDetect" method = "POST"
+         enctype = "multipart/form-data" style="margin-top:50px">
+         <input style="font-size:22px" type = "file" name = "file" />
+         <input class="btn" style="font-size:22px" type = "submit" value="Upload and Detect"/>
+     </form></center>
 
    </body>
 </html>

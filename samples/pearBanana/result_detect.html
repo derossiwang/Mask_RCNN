@@ -2,12 +2,39 @@
 <html>
 <head>
     <title>Detection result</title>
+    <style>
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.btn {
+  border: none;
+  color: red;
+  border: 2px solid red; /* Green */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  padding: 14px 40px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+}
+.btn:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+</style>
 </head>
 <body>
-    <center><img src="{{ url_for('static', filename='/images/detection_result.jpg' ) }}" alt="detection results" width="1024" height="1024"></center>
+<h1 style="text-align:center;font-size:40px">Detection Result</h1>
+<form action = "http://localhost:5000/" method="GET">
+        <center><button class="btn" name="bachHomeButton" type="submit">Go Back</button></center>
+</form>
+<hr>
 
-    <form action = "http://localhost:5000/" method="GET">
-        <button name="bachHomeButton" type="submit">Go Back to The index page</button>
-    </form>
+  <center><img src="{{ url_for('static', filename='/images/detection_result.jpg' ) }}" alt="detection results" class="image" style="display:inline"></center>
+<hr>
 </body>
 </html>
