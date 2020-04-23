@@ -75,19 +75,17 @@ Other common packages listed in `requirements.txt`.
       [[Tutorial2]](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#install-windows) 
 
    2. Issue the command 'nvcc -V' to verify CUDA and cuDNN installation, you should see the version of your cuda tools. 
-
-      ![Instance Segmentation Sample](assets/cuda_test.jpg)
-
-   3. Test You can start the tesnforflow-GPU without errors by issue the command in python 
-
-       ```bash
+![Instance Segmentation Sample](assets/cuda_test.jpg)
+   
+3. Test You can start the tesnforflow-GPU without errors by issue the command in python 
+   
+    ```bash
        import tensorflow as tf
        hello = tf.constant('Hello, TensorFlow!')
        sess = tf.Session()
        print(sess.run(hello))
-       ```
-   ![Instance Segmentation Sample](assets/gpu_test.jpg)
-
+    ```
+![Instance Segmentation Sample](assets/gpu_test.jpg)   
 6. Then install Keras v2.1.3 via pip command
 
    ```bash
