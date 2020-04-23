@@ -53,7 +53,7 @@ Other common packages listed in `requirements.txt`.
 
     1. Copy all the cuDNN components to 'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0'
 
-    2. Copy the unziped cuda folder to C:\tools, so that cuda exists at C:\tools\cuda
+    2. Copy the unzipped cuda folder to C:\tools, so that cuda exists at C:\tools\cuda
 
     3. **[IMPORTANT]** Setup path of Toolkit, otherwise tensorflow-gpu will not be able to run. 
 
@@ -66,44 +66,47 @@ Other common packages listed in `requirements.txt`.
        SET PATH=C:\tools\cuda\bin;%PATH%
        ```
 
-5. Restart the computer. Test you have your GPU Toolkit ready for tensorflow. If you encountered any error, please reinstall again. Here are some useful Tutorials to help to install the Tensorflow, CUDA and cuDNN. 
+5. Restart the computer. Test that GPU Toolkit is ready for tensorflow. 
 
-   1. [[Useful Configuration Tutorial]](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/install.html)  
+   1. Issue the command 'nvcc -V' to verify CUDA and cuDNN installation, you should see the version of your cuda tools. 
+     ![Instance Segmentation Sample](assets/cuda_test.JPG)
 
-      [[Tutorials1]](https://www.tensorflow.org/install/gpu) 
+   2. If you encountered any error, please reinstall again. Here are some useful Tutorials to help to install the Tensorflow, CUDA and cuDNN. 
 
-      [[Tutorial2]](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#install-windows) 
+       1. [[Useful Configuration Tutorial]](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/install.html)  
 
-   2. Issue the command 'nvcc -V' to verify CUDA and cuDNN installation, you should see the version of your cuda tools. 
-![Instance Segmentation Sample](assets/cuda_test.JPG)
-   
-3. Test You can start the tesnforflow-GPU without errors by issue the command in python 
-   
+          [[Tutorials1]](https://www.tensorflow.org/install/gpu) 
+
+          [[Tutorial2]](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#install-windows) 
+
+6. Test You can start the tesnforflow-GPU without errors by issue the command in python 
+
     ```bash
        import tensorflow as tf
        hello = tf.constant('Hello, TensorFlow!')
        sess = tf.Session()
        print(sess.run(hello))
     ```
-![Instance Segmentation Sample](assets/gpu_test.JPG)   
-6. Then install Keras v2.1.3 via pip command
+    ![Instance Segmentation Sample](assets/gpu_test.JPG)   
+
+7. Then install Keras v2.1.3 via pip command
 
    ```bash
    pip install keras==2.1.3
    ```
 
-7. Navigate to the Mask RCNN folder, Install dependencies
+8. Navigate to the Mask RCNN folder, Install dependencies
 
    ```bash
    pip3 install -r requirements.txt
    ```
 
-8. Run setup from the repository root directory
+9. Run setup from the repository root directory
     ```bash
     python3 setup.py install
     ```
-    
-9. ***Download the pretrained model from [xxxxxxxxxxx]*.**
+
+10. ***Download the pretrained model from [xxxxxxxxxxx]*.**
 
     1. Create a folder named logs under the Mask_RCNN root directory
     2. Unzip the downloaded models to 'Mask_RCNN/logs'
@@ -111,7 +114,7 @@ Other common packages listed in `requirements.txt`.
 
 ```
 Mask_RCNN
-    ├── assets        
+    ├── assets  //images for README      
     ├── logs							
     |   └── res50-3class  
     |   |   └── mask_rcnn_fruit_0075.h5 //pre-trained model 
@@ -123,10 +126,10 @@ Mask_RCNN
     └── samples
         └── pearBanana
     |    |   |   └── static
-    |    |   | 		└──images			//folders to store the detection result
+    |    |   | 		└──images			//folder to store the detection result
     |    |   | 		|	└──detection_result.jpg
     |    |   | 		|	└──splash_result.jpg
-       			    └──initializeImag	//contain a image to initialize the model
+       			    └──initializeImag	//contain an image to initialize the model
     |    |   |   └── upload_images		//folder to store the uploaded image by users
     |    |   |   └──app-2class.py		//server 1 to start detection on 2 classes 
     |    |   |   └──app-3class.py		//server 2 to start detection on 3 classes
@@ -149,7 +152,7 @@ Setting up the server can take a while as it has to initialize the model, usuall
 
 ## Usage
 
-1. Open a web browser and visit `http://localhost:5000/`
+1. Open a web browser and visit `http://127.0.0.1:5000/`
 ![successfully setup server](assets/home_page.JPG)
 2. Click The 'Detect' button if you wish to run standard fruit detection. If you would like to apply a colour splash effect, click the 'Splash' button.
 3. Click 'Chose file' button to chose a 'jpg' image, then upload the image to model via 'Upload and Detect/Splash' button. Wait for the computer to run the detection/colour-splash.
@@ -169,4 +172,4 @@ This app was developed for COMP90055 Research Project supervised by Prof. Richar
 
 Author of the project:
 
-Chengsheng Wang
+- Chengsheng Wang
