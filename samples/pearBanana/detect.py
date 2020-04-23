@@ -1,3 +1,16 @@
+'''
+The script is derived and modified based on the sample tutorials given in the original repo.
+The original author is honoured.
+
+honour the original author:
+Copyright (c) 2018 Matterport, Inc.
+Licensed under the MIT License (see LICENSE for details)
+Written by Waleed Abdulla
+
+a simple terminal version of running detections.
+Must change parameters like model manually
+'''
+
 import os
 import sys
 import random
@@ -18,7 +31,7 @@ from mrcnn import visualize
 
 # Import config
 sys.path.append(os.path.join(ROOT_DIR, "samples/pearBanana/"))  # To find local version
-import yellowGreen
+import fruit3class
 
 # get_ipython().run_line_magic('matplotlib', 'inline')
 
@@ -31,7 +44,7 @@ COCO_MODEL_PATH = os.path.join(ROOT_DIR, "logs/res101-3class/mask_rcnn_fruit_006
 # Directory of images to run detection on
 IMAGE_DIR = os.path.join(ROOT_DIR, "datasets/fruit/test")
 
-class InferenceConfig(yellowGreen.FruitConfig):
+class InferenceConfig(fruit3class.FruitConfig):
     # Set batch size to 1 since we'll be running inference on
     # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
     GPU_COUNT = 1

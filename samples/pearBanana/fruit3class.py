@@ -4,6 +4,7 @@ The original file is written in the ballon.py, which is written by Waleed Abdull
 Hence, his the work is honoured and credit must be given to the original author
 
 honour the original author:
+
 Copyright (c) 2018 Matterport, Inc.
 Licensed under the MIT License (see LICENSE for details)
 Written by Waleed Abdulla
@@ -77,7 +78,7 @@ class FruitConfig(Config):
     # BACKBONE = "resnet50"
 
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 2  # Background + banana + pear
+    NUM_CLASSES = 1 + 3  # Background + pear + banana-ripe + banana-nonRipe
 
     # Input image resizing
     # Generally, use the "square" resizing mode for training and predicting
@@ -129,7 +130,7 @@ class FruitConfig(Config):
 
     # Maximum number of ground truth instances to use in one image
     # don't think an identify-able image can hold >200 fruit instances
-    MAX_GT_INSTANCES = 100 # was 200 for head, 150 for 4+, 100 for all
+    MAX_GT_INSTANCES = 150 # was 200 for head, 150 for 4+, 100 for all
 
     # Number of training steps per epoch
     STEPS_PER_EPOCH = 300
@@ -164,8 +165,9 @@ class FruitDataset(utils.Dataset):
         subset: Subset to load: train or val
         """
         # Add classes. We have only one class to add.
-        self.add_class("fruit", 1, "banana")
-        self.add_class("fruit", 2, "pear")
+        self.add_class("fruit", 1, "pear")
+        self.add_class("fruit", 2, "banana-ripe")
+        self.add_class("fruit", 3, "banana-nonRipe")
 
         # Train or validation dataset?
         assert subset in ["train", "val"]
@@ -205,14 +207,14 @@ class FruitDataset(utils.Dataset):
                 # print("--------------------checked VIA is Dict---------------")
                 polygons = [r['shape_attributes'] for r in a['regions'].values()]
                 name = [r['region_attributes']['name'] for r in a['regions'].values()]
-                name_dict = {"banana": 1, "pear": 2}
+                name_dict = {"pear": 1, "banana-ripe": 2, "banana-nonRipe": 3}
                 name_id = [name_dict[a] for a in name]
                 # print("for this image, classified as: -----------------", name_id, "---------------------")
             else:
                 # print("--------------------checked VIA is list---------------")
                 polygons = [r['shape_attributes'] for r in a['regions']]
                 name = [r['region_attributes']['name'] for r in a['regions']]
-                name_dict = {"banana": 1, "pear": 2}
+                name_dict = {"pear": 1, "banana-ripe": 2, "banana-nonRipe": 3}
                 name_id = [name_dict[a] for a in name]
                 # print("for this image, classified as: -----------------", name_id, "---------------------")
 
@@ -316,13 +318,13 @@ def train(model):
 
     # MULTIPLE STAGE to help converge easier, since we have limited dataset
 
-    # # we have limited training data, so train the classifier only might be a gud idea
-    # # this ensure we keep the good coco weights untouched
-    # # Training - Stage 1
+    # we have limited training data, so train the classifier only might be a gud idea
+    # this ensure we keep the good coco weights untouched
+    # Training - Stage 1
     # print("Training network heads")
     # model.train(dataset_train, dataset_val,
     #             learning_rate=config.LEARNING_RATE,
-    #             epochs=35,
+    #             epochs=50,
     #             augmentation=augmentation,
     #             layers='heads')
 
@@ -340,7 +342,7 @@ def train(model):
     print("Training all layers")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE/100,
-                epochs=65,
+                epochs=75,
                 augmentation=augmentation,
                 layers='all')
 
