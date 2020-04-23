@@ -1,7 +1,9 @@
 """
-Mask R-CNN
-Train on the toy Balloon dataset and implement color splash effect.
+The script is slightly modified to allow training on fruits.
+The original file is written in the ballon.py, which is written by Waleed Abdulla.
+Hence, his the work is honoured and credit must be given to the original author
 
+honour the original author:
 Copyright (c) 2018 Matterport, Inc.
 Licensed under the MIT License (see LICENSE for details)
 Written by Waleed Abdulla

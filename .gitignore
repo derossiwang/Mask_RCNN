@@ -9,6 +9,7 @@ test/
 # image-comparisons store between different models
 compare-2class
 compare-3class
+flask_run_sample_result
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
