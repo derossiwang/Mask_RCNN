@@ -103,7 +103,7 @@ Other common packages listed in `requirements.txt`.
     python3 setup.py install
     ```
     
-9. Download the pretrained model from [xxxxxxxxxxx].
+9. ***Download the pretrained model from [xxxxxxxxxxx]*.**
 
     1. Create a folder named logs under the Mask_RCNN root directory
     2. Unzip the downloaded models to 'Mask_RCNN/logs'
@@ -135,3 +135,38 @@ Mask_RCNN
     |    |   |   └──5 htmls pages		//webpage used for Flask Server
     
 ```
+
+# Starting the server
+
+```bash
+$ cd DIR_TO_YOUR_PROJECT/MASK_RCNN/samples/pearBanana
+$ python3 app-2class.py		//if you want to detect pear and banana
+$ python3 app-3class.py		//if you want to detect pear, ripe banana and nonripe banana
+```
+
+Setting up the server can take a while as it has to initialize the model, usually it takes up to 1 minute. Please be patient. If you see the following outputs from the console, the server has been set up successfully.
+![successfully setup server](assets/setup_success.JPG)
+
+## Usage
+
+1. Open a web browser and visit `http://localhost:5000/`
+![successfully setup server](assets/home_page.JPG)
+2. Click The 'Detect' button if you wish to run standard fruit detection. If you would like to apply a colour splash effect, click the 'Splash' button.
+3. Click 'Chose file' button to chose a 'jpg' image, then upload the image to model via 'Upload and Detect/Splash' button. Wait for the computer to run the detection/colour-splash.
+![successfully setup server](assets/upload.JPG) 
+   1. It is highly recommend that you have a GPU card to use this repo. Otherwise the detection can be extremely slow. 
+   2. Note that depends on the image quality, numbers of potential fruit objects in image and your computational power, the Duration of detection can vary greatly. It can take from 30seconds at minimum, it can also take up to 10 minutes if you detect a high quality & high fruit density image on a less powerful GPU. 
+4. The detection result will be shown on the output web page.
+![successfully setup server](assets/result.JPG) 
+     1. You can also manually inspect the result from the 'MASK_RCNN/samples/pearBanana/static/images'. The 'detection_result.jpg' is the output of your standard detection. The 'splash_result.jpg' is the output of your colour splash detection.  The console also provides some useful information about the image.
+![successfully setup server](assets/useful_output.JPG) 
+
+5. If you wish to detect another image, click the 'Go Back' to return to the homepage. Then select the desired method to run detection again. 
+
+## Note
+
+This app was developed for COMP90055 Research Project supervised by Prof. Richard Sinnott.
+
+Author of the project:
+
+Chengsheng Wang
