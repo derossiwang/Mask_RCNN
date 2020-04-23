@@ -72,7 +72,7 @@ Other common packages listed in `requirements.txt`.
 5. Restart the computer. Test that GPU Toolkit is ready for tensorflow. 
 
    1. Issue the command `nvcc -V` to verify CUDA and cuDNN installation, you should see the version of your CUDA tools. 
-     ![Instance Segmentation Sample](assets/cuda_test.JPG)
+       ![Instance Segmentation Sample](assets/cuda_test.JPG)
 
    2. If you encountered any error, please reinstall again. Here are some useful Tutorials to help to install the Tensorflow, CUDA and cuDNN. 
 
@@ -110,15 +110,25 @@ Other common packages listed in `requirements.txt`.
     python3 setup.py install
     ```
 
-10. ***Download the pretrained model from [xxxxxxxxxxx]*.**
+10. ***Download the pretrained model*.**
 
-    1. Create a folder named logs under the Mask_RCNN root directory
-    2. Unzip the downloaded models to `Mask_RCNN/logs`
-    3. Resultantly, your project directory should looks like below:
+    1. [resnet50-3class](https://drive.google.com/file/d/1-ZBn02Bxd4JGjKUyDH4vEjb8eQufm9IZ/view?usp=sharing) 
+    
+        [resnet101-2class](https://drive.google.com/file/d/1eK5h15d-E2CTFBRACfAJAsZbXsgcoB2o/view?usp=sharing) 
+    
+        [resnet101-3class](https://drive.google.com/file/d/1dvjg7xk1PTWeawwifY8UdLkxljBjFb5T/view?usp=sharing) 
+    
+    2. Create a folder named logs under the Mask_RCNN root directory
+    
+    3. Unzip the downloaded models to `Mask_RCNN/logs`
+    
+    4. Resultantly, your project directory should looks like below:
 
 ```
 Mask_RCNN
-    ├── assets  //images for README      
+    ├── assets  //images for README
+    ├── Provided_test_images //provided images for users to detect.
+    					   //Users can choose other image if they wish 
     ├── logs							
     |   └── res50-3class  
     |   |   └── mask_rcnn_fruit_0075.h5 //pre-trained model 
