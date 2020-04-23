@@ -1,4 +1,4 @@
-# Mask R-CNN for Object Detection and Segmentation
+# Mask R-CNN for Fruit Detection and Segmentation
 
 This is an [implementation](https://github.com/matterport/Mask_RCNN) of [Mask R-CNN](https://arxiv.org/abs/1703.06870) on Python 3, Keras,TensorFlow and Flask. 
 
@@ -36,13 +36,13 @@ Other common packages listed in `requirements.txt`.
     └── Mask_RCNN
     ```
 
-2. If you have a Nvidia GPU, it is **compulsory** to install a GPU version of tensorflow in order to run this repo. To install, issue the command shown below. Please also follow step 3 and 4 to setup your graphic card. 
+2. If you have a Nvidia GPU, it is **compulsory** to install a GPU version of TensorFlow in order to run this repo. To install, issue the command shown below. Please also follow step 3 and 4 to setup your graphic card. 
 
     ```bash
       pip install tensorflow-gpu==1.14
     ```
 
-   If you don't have a Graphic Card, simply install tensorflow via
+   If you don't have a Graphic Card, simply install TensorFlow via
 
     ```bash
       pip install tensorflow==1.14
@@ -58,7 +58,7 @@ Other common packages listed in `requirements.txt`.
 
     2. Copy the unzipped cuda folder to `C:\tools`, so that cuda exists at `C:\tools\cuda` 
 
-    3. **[IMPORTANT]** Setup path of Toolkit, otherwise tensorflow-gpu will not be able to run. 
+    3. **[IMPORTANT]** Setup path of Toolkit, otherwise TensorFlow-gpu will not be able to run. 
 
        Issue the following command in the terminal:
 
@@ -69,12 +69,12 @@ Other common packages listed in `requirements.txt`.
        SET PATH=C:\tools\cuda\bin;%PATH%
        ```
 
-5. Restart the computer. Test that GPU Toolkit is ready for tensorflow. 
+5. Restart the computer. Test that GPU Toolkit is ready for TensorFlow. 
 
    1. Issue the command `nvcc -V` to verify CUDA and cuDNN installation, you should see the version of your CUDA tools. 
        ![Instance Segmentation Sample](assets/cuda_test.JPG)
 
-   2. If you encountered any error, please reinstall again. Here are some useful Tutorials to help to install the Tensorflow, CUDA and cuDNN. 
+   2. If you encountered any error, please reinstall again. Here are some useful Tutorials to help to install the TensorFlow, CUDA and cuDNN. 
 
        1. [[Useful Configuration Tutorial]](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/install.html)  
 
@@ -82,7 +82,7 @@ Other common packages listed in `requirements.txt`.
 
           [[Tutorial2]](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#install-windows) 
 
-6. Test You can start the tesnforflow-GPU without errors by issue the command in `Python` 
+6. Test You can start the TensorFlow-GPU without errors by issue the command in `Python` 
 
     ```bash
        import tensorflow as tf
