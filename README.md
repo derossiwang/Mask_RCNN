@@ -20,7 +20,9 @@ The implementation of the MASK RCNN framework is written by Matterport , his wor
 ```
 
 ## Requirements
-Python 3.6.8, TensorFlow 1.14 - gpu, Keras 2.1.3.
+- Python 3.6.8
+- TensorFlow 1.14-gpu
+- Keras 2.1.3.
 
 Other common packages listed in `requirements.txt`.
 
@@ -51,9 +53,9 @@ Other common packages listed in `requirements.txt`.
    
 4. **[Follow only If you have a GPU card]**Download [cuDNN v7.6.5 (November 5th, 2019), for CUDA 10.0](https://developer.nvidia.com/rdp/cudnn-download#a-collapse765-10)] zip file and unzip it to a folder. 
 
-    1. Copy all the cuDNN components to 'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0'
+    1. Copy all the cuDNN components to `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0 ` 
 
-    2. Copy the unzipped cuda folder to C:\tools, so that cuda exists at C:\tools\cuda
+    2. Copy the unzipped cuda folder to `C:\tools`, so that cuda exists at `C:\tools\cuda` 
 
     3. **[IMPORTANT]** Setup path of Toolkit, otherwise tensorflow-gpu will not be able to run. 
 
@@ -68,7 +70,7 @@ Other common packages listed in `requirements.txt`.
 
 5. Restart the computer. Test that GPU Toolkit is ready for tensorflow. 
 
-   1. Issue the command 'nvcc -V' to verify CUDA and cuDNN installation, you should see the version of your cuda tools. 
+   1. Issue the command `nvcc -V` to verify CUDA and cuDNN installation, you should see the version of your cuda tools. 
      ![Instance Segmentation Sample](assets/cuda_test.JPG)
 
    2. If you encountered any error, please reinstall again. Here are some useful Tutorials to help to install the Tensorflow, CUDA and cuDNN. 
@@ -109,7 +111,7 @@ Other common packages listed in `requirements.txt`.
 10. ***Download the pretrained model from [xxxxxxxxxxx]*.**
 
     1. Create a folder named logs under the Mask_RCNN root directory
-    2. Unzip the downloaded models to 'Mask_RCNN/logs'
+    2. Unzip the downloaded models to `Mask_RCNN/logs`
     3. Resultantly, your project directory should looks like below:
 
 ```
@@ -154,8 +156,8 @@ Setting up the server can take a while as it has to initialize the model, usuall
 
 1. Open a web browser and visit `http://127.0.0.1:5000/`
 ![successfully setup server](assets/home_page.JPG)
-2. Click The 'Detect' button if you wish to run standard fruit detection. If you would like to apply a colour splash effect, click the 'Splash' button.
-3. Click 'Chose file' button to chose a 'jpg' image, then upload the image to model via 'Upload and Detect/Splash' button. Wait for the computer to run the detection/colour-splash.
+2. Click The `Detect` button if you wish to run standard fruit detection. If you would like to apply a colour splash effect, click the `Splash` button.
+3. Click `Choose File` button to chose a 'jpg' image, then upload the image to model via `Upload and Detect`button. Wait for the computer to run the detection/colour-splash.
 ![successfully setup server](assets/upload.JPG) 
    1. It is highly recommend that you have a GPU card to use this repo. Otherwise the detection can be extremely slow. 
    2. Note that depends on the image quality, numbers of potential fruit objects in image and your computational power, the Duration of detection can vary greatly. It can take from 30seconds at minimum, it can also take up to 10 minutes if you detect a high quality & high fruit density image on a less powerful GPU. 
@@ -164,7 +166,7 @@ Setting up the server can take a while as it has to initialize the model, usuall
      1. You can also manually inspect the result from the 'MASK_RCNN/samples/pearBanana/static/images'. The 'detection_result.jpg' is the output of your standard detection. The 'splash_result.jpg' is the output of your colour splash detection.  The console also provides some useful information about the image.
 ![successfully setup server](assets/useful_output.JPG) 
 
-5. If you wish to detect another image, click the 'Go Back' to return to the homepage. Then select the desired method to run detection again. 
+5. If you wish to detect another image, click the`Go Back` to return to the homepage. Then select the desired method to run detection again. 
 
 ## Note
 
