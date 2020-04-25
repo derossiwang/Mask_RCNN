@@ -147,6 +147,7 @@ Mask_RCNN
     |    |   |   └── upload_images		//folder to store the uploaded image by users
     |    |   |   └──app-2class.py		//server 1 to start detection on 2 classes 
     |    |   |   └──app-3class.py		//server 2 to start detection on 3 classes
+    |    |   |   └──app-resnet50-3class.py	//server 3 detect 3 classes using resnet50 backbone
     |    |   |   └──fruit.py			//training script
     |    |   |   └──fruit3class.py		//training script
     |    |   |   └──5 htmls pages		//webpage used for Flask Server
