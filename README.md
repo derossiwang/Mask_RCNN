@@ -71,7 +71,7 @@ Other common packages listed in `requirements.txt`.
 
 5. Restart the computer. Test that GPU Toolkit is ready for TensorFlow. 
 
-   1. Issue the command `nvcc -V` to verify CUDA and cuDNN installation, you should see the version of your CUDA tools. 
+   1. **[Follow only If you have a GPU card]**Issue the command `nvcc -V` to verify CUDA and cuDNN installation, you should see the version of your CUDA tools. 
        ![Instance Segmentation Sample](assets/cuda_test.JPG)
 
    2. If you encountered any error, please reinstall again. Here are some useful Tutorials to help to install the TensorFlow, CUDA and cuDNN. 
@@ -82,7 +82,7 @@ Other common packages listed in `requirements.txt`.
 
           [[Tutorial2]](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#install-windows) 
 
-6. Test You can start the TensorFlow-GPU without errors by issue the command in `Python` 
+6. Test You can start the TensorFlow-GPU or normal TensorFlow without errors by issue the command in `Python` 
 
     ```bash
        import tensorflow as tf
@@ -160,6 +160,7 @@ Mask_RCNN
 $ cd DIR_TO_YOUR_PROJECT/MASK_RCNN/samples/pearBanana
 $ python3 app-2class.py		//if you want to detect pear and banana
 $ python3 app-3class.py		//if you want to detect pear, ripe banana and nonripe banana
+$ python3 app-resnet50-3class.py //if you want to detect pear, ripe banana and nonripe banana,using resnet50 backbone
 ```
 
 Setting up the server can take a while as it has to initialize the model, usually it takes up to 1 minute. Please be patient. If you see the following outputs from the console, the server has been set up successfully.
