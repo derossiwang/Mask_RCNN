@@ -48,11 +48,11 @@ Other common packages listed in `requirements.txt`.
       pip install tensorflow==1.14
     ```
 
-3. **[Follow only If you have a GPU card]**Go to the [Nvidia Website](https://developer.nvidia.com/cuda-10.0-download-archive), Follow the instructions to install CUDA Toolkit 10.0 Archive. 
+3. **[Follow only If you have a GPU card]** Go to the [Nvidia Website](https://developer.nvidia.com/cuda-10.0-download-archive), Follow the instructions to install CUDA Toolkit 10.0 Archive. 
 
    1. Note that you may need to install Microsoft Visual Studio 2017 if the installation program asks.
    
-4. **[Follow only If you have a GPU card]**Download [cuDNN v7.6.5 (November 5th, 2019), for CUDA 10.0](https://developer.nvidia.com/rdp/cudnn-download#a-collapse765-10)] zip file and unzip it to a folder. 
+4. **[Follow only If you have a GPU card]** Download [cuDNN v7.6.5 (November 5th, 2019), for CUDA 10.0](https://developer.nvidia.com/rdp/cudnn-download#a-collapse765-10)] zip file and unzip it to a folder. 
 
     1. Copy all the cuDNN components to `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0 ` 
 
@@ -177,7 +177,7 @@ Setting up the server can take a while as it has to initialize the model, usuall
    2. Note that depends on the image quality, numbers of potential fruit objects in image and your computational power, the Duration of detection can vary greatly. It can take from 30 seconds at minimum, it can also take up to 10 minutes if you detect a high quality & high fruit density image on a less powerful GPU. 
 4. The detection result will be shown on the output web page.
 ![successfully setup server](assets/result.JPG) 
-     1. You can also manually inspect the result from the 'MASK_RCNN/samples/pearBanana/static/images'. The 'detection_result.jpg' is the output of your standard detection. The 'splash_result.jpg' is the output of your colour splash detection.  The console also provides some useful information about the image.
+     1. You can also manually inspect the result from the 'MASK_RCNN/samples/pearBanana/static/images'. The 'detection_result.jpg' is the output of your standard detection. The 'splash_result.jpg' is the output of your colour splash detection.  The console also provides some useful information about the image.  *If you find the webpage keeps showing the same picture, it is because the browser cache. Please manually inspect your local result file*.
 ![successfully setup server](assets/useful_output.JPG) 
 
 5. If you wish to detect another image, click the`Go Back` to return to the homepage. Then select the desired method to run detection again. 
