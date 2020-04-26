@@ -71,7 +71,7 @@ Other common packages listed in `requirements.txt`.
 
 5. Restart the computer. Test that GPU Toolkit is ready for TensorFlow. 
 
-   1. **[Follow only If you have a GPU card]**Issue the command `nvcc -V` to verify CUDA and cuDNN installation, you should see the version of your CUDA tools. 
+   1. **[Follow only If you have a GPU card]** Issue the command `nvcc -V` to verify CUDA and cuDNN installation, you should see the version of your CUDA tools. 
        ![Instance Segmentation Sample](assets/cuda_test.JPG)
 
    2. If you encountered any error, please reinstall again. Here are some useful Tutorials to help to install the TensorFlow, CUDA and cuDNN. 
@@ -82,7 +82,7 @@ Other common packages listed in `requirements.txt`.
 
           [[Tutorial2]](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#install-windows) 
 
-6. Test You can start the TensorFlow-GPU or normal TensorFlow without errors by issue the command in `Python` 
+6. Test You can start the TensorFlow/GPU or normal TensorFlow without errors by issue the command in `Python` 
 
     ```bash
        import tensorflow as tf
@@ -174,8 +174,8 @@ Setting up the server can take a while as it has to initialize the model, usuall
 3. Click `Choose File` button to chose a 'jpg' image, then upload the image to model via `Upload and Detect`button. Wait for the computer to run the detection/colour-splash.
 ![successfully setup server](assets/upload.JPG) 
    1. It is highly recommend that you have a GPU card to use this repo. Otherwise the detection can be extremely slow. 
-   2. Note that depends on the image quality, numbers of potential fruit objects in image and your computational power, the Duration of detection can vary greatly. It can take from 30 seconds at minimum, it can also take up to 10 minutes if you detect a high quality & high fruit density image on a less powerful GPU. 
-4. The detection result will be shown on the output web page.
+   2. ***Note that depends on the image quality, numbers of potential fruit objects in image and your computational power, the Duration of detection can vary greatly.*** It can take from 30 seconds at minimum, it can also take up to 10 minutes if you detect a high quality & high fruit density image on a less powerful GPU. **Hence, Please be patient.**
+4. The detection result will be shown automatically via another web page.
 ![successfully setup server](assets/result.JPG) 
      1. You can also manually inspect the result from the 'MASK_RCNN/samples/pearBanana/static/images'. The 'detection_result.jpg' is the output of your standard detection. The 'splash_result.jpg' is the output of your colour splash detection.  The console also provides some useful information about the image.  *If you find the webpage keeps showing the same picture, it is because the browser cache. Please manually inspect your local result file*.
 ![successfully setup server](assets/useful_output.JPG) 
