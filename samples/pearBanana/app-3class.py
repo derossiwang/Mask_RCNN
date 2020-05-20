@@ -135,7 +135,19 @@ def detect_onsite(model):
     visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
                                 class_names, r['scores'])
     print('executed detect_onsite')
-    return 'completed detecting: ' + names_chosen
+    print('completed detecting: ' + names_chosen)
+    pear_count = 0
+    ripe_banana_count = 0
+    unripe_banana_count = 0
+    for category in r['class_ids']:
+        if category == 1:
+            pear_count = pear_count + 1
+        elif category == 2:
+            ripe_banana_count = ripe_banana_count + 1
+        elif category == 3:
+            unripe_banana_count = unripe_banana_count + 1
+    count = {'pear': pear_count, 'ripe_banana': ripe_banana_count, 'unripe_banana': unripe_banana_count}
+    return count
 ########################### only accepet jpg file ####################################
 def allowed_file(filename):
     return '.' in filename and \
@@ -220,8 +232,8 @@ def upload_file_splash():
 
 @app.route('/detect')
 def detect():
-    detect_onsite(model)
-    return render_template('result_detect.html')
+    count = detect_onsite(model)
+    return render_template('result_detect3class.html', countresult = count)
 
 @app.route('/splash')
 def splash():

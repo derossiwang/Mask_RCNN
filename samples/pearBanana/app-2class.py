@@ -96,7 +96,7 @@ class InferenceConfig(fruit.FruitConfig):
 
     # Minimum probability value to accept a detected instance
     # ROIs below this threshold are skipped
-    DETECTION_MIN_CONFIDENCE = 0.6
+    DETECTION_MIN_CONFIDENCE = 0.7
 
     # Max number of final detections
     DETECTION_MAX_INSTANCES = 200
@@ -141,7 +141,16 @@ def detect_onsite(model):
     visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
                                 class_names, r['scores'])
     print('executed detect_onsite')
-    return 'completed detecting: ' + names_chosen
+    print('completed detecting: ' + names_chosen)
+    banana_count = 0
+    pear_count = 0
+    for category in r['class_ids']:
+        if category == 1:
+            banana_count = banana_count + 1
+        elif category == 2:
+            pear_count = pear_count + 1
+    count = {'banana': banana_count, 'pear': pear_count}
+    return count
 ########################### only accepet jpg file ####################################
 def allowed_file(filename):
     return '.' in filename and \
@@ -224,8 +233,8 @@ def upload_file_splash():
 
 @app.route('/detect')
 def detect():
-    detect_onsite(model)
-    return render_template('result_detect.html')
+    count = detect_onsite(model)
+    return render_template('result_detect.html', countresult = count)
 
 @app.route('/splash')
 def splash():

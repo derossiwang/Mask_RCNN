@@ -150,7 +150,7 @@ Mask_RCNN
     |    |   |   └──app-resnet50-3class.py	//server 3 detect 3 classes using resnet50 backbone
     |    |   |   └──fruit.py			//training script
     |    |   |   └──fruit3class.py		//training script
-    |    |   |   └──5 htmls pages		//webpage used for Flask Server
+    |    |   |   └──6 htmls pages		//webpage used for Flask Server
     
 ```
 
@@ -174,8 +174,8 @@ Setting up the server can take a while as it has to initialize the model, usuall
 3. Click `Choose File` button to chose a 'jpg' image, then upload the image to model via `Upload and Detect`button. Wait for the computer to run the detection/colour-splash.
 ![successfully setup server](assets/upload.JPG) 
    1. It is highly recommend that you have a GPU card to use this repo. Otherwise the detection can be extremely slow. 
-   2. ***Note that depends on the image quality, numbers of potential fruit objects in image and your computational power, the Duration of detection can vary greatly.*** It can take from 30 seconds at minimum, it can also take up to 10 minutes if you detect a high quality & high fruit density image on a less powerful GPU. **Hence, Please be patient.**
-4. The detection result will be shown automatically via another web page.
+   2. ***Note that depends on the image quality, numbers of potential fruit objects in image and your computational power, the Duration of detection can vary greatly.*** The detection result can be generated in 10 seconds. However, transform the detection result to an image can take from 30 seconds at minimum, it can also take up to 10 minutes if you detect a high quality & high fruit density image on a less powerful GPU. **Hence, Please be patient.**
+4. The detection result & rendered image will be shown automatically via another web page.
 ![successfully setup server](assets/result.JPG) 
      1. You can also manually inspect the result from the 'MASK_RCNN/samples/pearBanana/static/images'. The 'detection_result.jpg' is the output of your standard detection. The 'splash_result.jpg' is the output of your colour splash detection.  The console also provides some useful information about the image.  *If you find the webpage keeps showing the same picture, it is because the browser cache. Please manually inspect your local result file*.
 ![successfully setup server](assets/useful_output.JPG) 

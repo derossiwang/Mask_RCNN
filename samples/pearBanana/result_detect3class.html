@@ -33,8 +33,9 @@ img {
         <center><button class="btn" name="bachHomeButton" type="submit">Go Back</button></center>
 </form>
 <hr>
-    <center><h1>The banana count is, {{countresult.banana}}.</h1></center>
     <center><h1>The pear count is, {{countresult.pear}}.</h1></center>
+    <center><h1>The ripe banana count is, {{countresult.ripe_banana}}.</h1></center>
+    <center><h1>The unripe banana count is, {{countresult.unripe_banana}}.</h1></center>
   <center><img src="{{ url_for('static', filename='/images/detection_result.jpg' ) }}" alt="detection results" class="image" style="display:inline"></center>
 
 <hr>
